@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="Wedding Hub social preview">
-  <rect width="1200" height="630" fill="#f8f5f0"/>
-  <rect x="72" y="72" width="1056" height="486" rx="32" fill="#ffffff" stroke="#d6cbbd"/>
-  <text x="120" y="230" font-family="Inter, Arial, sans-serif" font-size="76" fill="#1f2933">Wedding Hub Template</text>
-  <text x="120" y="315" font-family="Inter, Arial, sans-serif" font-size="36" fill="#52616b">RSVP, guest management, schedule, travel, and Supabase setup.</text>
-  <circle cx="876" cy="372" r="86" fill="none" stroke="#8a5a44" stroke-width="24"/>
-  <circle cx="996" cy="372" r="86" fill="none" stroke="#2f6654" stroke-width="24"/>
-</svg>

@@ -12,7 +12,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: "autoUpdate",
-      includeAssets: ["favicon.svg", "robots.txt", "social-preview.svg"],
+      includeAssets: ["robots.txt"],
       manifest: {
         name: "Wedding Hub Template",
         short_name: "Wedding Hub",
@@ -21,15 +21,7 @@ export default defineConfig({
         background_color: "#f8f5f0",
         display: "standalone",
         scope: "/",
-        start_url: "/",
-        icons: [
-          {
-            src: "/favicon.svg",
-            sizes: "any",
-            type: "image/svg+xml",
-            purpose: "any maskable"
-          }
-        ]
+        start_url: "/"
       },
       workbox: {
         skipWaiting: true,
