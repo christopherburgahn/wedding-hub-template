@@ -12,9 +12,13 @@ create table if not exists public.guests (
   last_name text not null,
   email text,
   attending boolean,
+  needs_accommodation boolean not null default false,
+  accommodation_notes text,
   dietary_notes text,
   travel_notes text,
   song_request text,
+  payment_status text not null default 'not_needed' check (payment_status in ('not_needed', 'pending', 'paid')),
+  payment_amount numeric(10,2),
   created_at timestamptz not null default now()
 );
 

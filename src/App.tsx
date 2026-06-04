@@ -1,6 +1,6 @@
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { Link, NavLink, Route, Routes, useNavigate } from "react-router-dom";
-import { CalendarDays, CheckCircle2, Database, Heart, Loader2, Lock, MapPin, Music, Users } from "lucide-react";
+import { BedDouble, CalendarDays, CheckCircle2, Database, Heart, Loader2, Lock, MapPin, Music, Users, WalletCards } from "lucide-react";
 import { Guest, isSupabaseConfigured, supabase } from "./lib/supabase";
 import { copy, eventDetails, Language, sampleGuests } from "./lib/templateData";
 
@@ -9,6 +9,8 @@ type RsvpForm = {
   last_name: string;
   email: string;
   attending: string;
+  needs_accommodation: string;
+  accommodation_notes: string;
   dietary_notes: string;
   travel_notes: string;
   song_request: string;
@@ -19,6 +21,8 @@ const emptyForm: RsvpForm = {
   last_name: "",
   email: "",
   attending: "true",
+  needs_accommodation: "false",
+  accommodation_notes: "",
   dietary_notes: "",
   travel_notes: "",
   song_request: "",
@@ -88,6 +92,8 @@ function Home({ language }: { language: Language }) {
       <section className="content-band">
         <div className="feature-grid">
           <Feature icon={<Users />} title="Guest workflow" body="Collect RSVPs, dietary notes, travel needs, and song requests." />
+          <Feature icon={<BedDouble />} title="Accommodation planning" body="Track who needs a room, capture notes, and share stay details for the whole weekend." />
+          <Feature icon={<WalletCards />} title="Payment coordination" body="Keep simple admin-side status and amount fields for contributions or shared weekend costs." />
           <Feature icon={<Database />} title="Supabase ready" body="Use the included schema, RLS policies, and seed data for your own project." />
           <Feature icon={<Lock />} title="Privacy first" body="The template ships without private media, real guest data, or hardcoded secrets." />
         </div>
@@ -133,6 +139,8 @@ function Register({ language }: { language: Language }) {
       last_name: form.last_name,
       email: form.email || null,
       attending: form.attending === "true",
+      needs_accommodation: form.needs_accommodation === "true",
+      accommodation_notes: form.accommodation_notes || null,
       dietary_notes: form.dietary_notes || null,
       travel_notes: form.travel_notes || null,
       song_request: form.song_request || null,
@@ -175,6 +183,17 @@ function Register({ language }: { language: Language }) {
             <option value="true">Will attend</option>
             <option value="false">Cannot attend</option>
           </select>
+        </label>
+        <label>
+          Accommodation
+          <select value={form.needs_accommodation} onChange={(event) => update("needs_accommodation", event.target.value)}>
+            <option value="false">No accommodation needed</option>
+            <option value="true">Needs accommodation</option>
+          </select>
+        </label>
+        <label>
+          Accommodation notes
+          <textarea value={form.accommodation_notes} onChange={(event) => update("accommodation_notes", event.target.value)} />
         </label>
         <label>
           Dietary notes
@@ -306,6 +325,14 @@ function Admin({ language }: { language: Language }) {
     () => guests.filter((guest) => guest.attending).length,
     [guests],
   );
+  const accommodationCount = useMemo(
+    () => guests.filter((guest) => guest.needs_accommodation).length,
+    [guests],
+  );
+  const pendingPaymentCount = useMemo(
+    () => guests.filter((guest) => guest.payment_status === "pending").length,
+    [guests],
+  );
 
   if (!isSignedIn) {
     return (
@@ -334,11 +361,21 @@ function Admin({ language }: { language: Language }) {
       <div className="page-heading">
         <div>
           <h1>{text.adminTitle}</h1>
-          <p>Review RSVPs and guest notes.</p>
+          <p>Review RSVPs, accommodation needs, and payment status.</p>
         </div>
-        <div className="summary-card">
-          <strong>{attendingCount}</strong>
-          <span>attending</span>
+        <div className="summary-grid">
+          <div className="summary-card">
+            <strong>{attendingCount}</strong>
+            <span>attending</span>
+          </div>
+          <div className="summary-card">
+            <strong>{accommodationCount}</strong>
+            <span>need rooms</span>
+          </div>
+          <div className="summary-card">
+            <strong>{pendingPaymentCount}</strong>
+            <span>payments pending</span>
+          </div>
         </div>
       </div>
       {loading && <p>Loading guests...</p>}
@@ -347,16 +384,16 @@ function Admin({ language }: { language: Language }) {
         <div className="guest-row guest-head" role="row">
           <span>Name</span>
           <span>Status</span>
-          <span>Dietary</span>
-          <span>Travel</span>
+          <span>Accommodation</span>
+          <span>Payment</span>
           <span>Song</span>
         </div>
         {guests.map((guest) => (
           <div className="guest-row" role="row" key={guest.id}>
             <span>{guest.first_name} {guest.last_name}</span>
             <span>{guest.attending ? "Attending" : "Not attending"}</span>
-            <span>{guest.dietary_notes || "-"}</span>
-            <span>{guest.travel_notes || "-"}</span>
+            <span>{guest.needs_accommodation ? guest.accommodation_notes || "Needed" : "No"}</span>
+            <span>{formatPayment(guest)}</span>
             <span>{guest.song_request || "-"}</span>
           </div>
         ))}
@@ -375,7 +412,7 @@ function InfoPage({ kind, language }: { kind: "travel" | "stay" | "activities"; 
     stay: {
       title: language === "en" ? "Accommodation" : "Uebernachtung",
       icon: <CalendarDays />,
-      body: "Share hotel blocks, room options, check-in details, nearby alternatives, and accessibility notes.",
+      body: "Share hotel blocks, room options, check-in details, nearby alternatives, accessibility notes, and weekend cost guidance.",
     },
     activities: {
       title: language === "en" ? "Activities" : "Aktivitaeten",
@@ -425,6 +462,12 @@ function ModePill() {
       {isSupabaseConfigured ? "Supabase connected" : "Demo mode"}
     </p>
   );
+}
+
+function formatPayment(guest: Guest) {
+  if (guest.payment_status === "not_needed") return "Not needed";
+  const label = guest.payment_status === "paid" ? "Paid" : "Pending";
+  return guest.payment_amount ? `${label} (${guest.payment_amount})` : label;
 }
 
 function NotFound() {

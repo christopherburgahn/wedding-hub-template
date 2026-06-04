@@ -6,9 +6,13 @@ export type Guest = {
   last_name: string;
   email: string | null;
   attending: boolean | null;
+  needs_accommodation: boolean;
+  accommodation_notes: string | null;
   dietary_notes: string | null;
   travel_notes: string | null;
   song_request: string | null;
+  payment_status: "not_needed" | "pending" | "paid";
+  payment_amount: number | null;
   created_at: string;
 };
 

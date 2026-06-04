@@ -1,14 +1,16 @@
 # Wedding Hub Template
 
-A customizable wedding website and guest-management portal built with React, Vite, Tailwind CSS, shadcn/ui-inspired component patterns, and Supabase.
+A customizable wedding-weekend website and guest-management portal built with React, Vite, Tailwind CSS, shadcn/ui-inspired component patterns, and Supabase.
 
-This template is designed for couples who want one private-but-friendly place for RSVPs, schedule details, travel information, accommodation notes, and basic guest administration.
+This template is designed for couples who want one private-but-friendly place to coordinate the whole wedding weekend: RSVPs, schedule details, travel information, accommodation planning, guest payments, and basic administration.
 
 ## Features
 
-- Wedding landing page with editable event details
+- Wedding-weekend landing page with editable event details
 - RSVP and guest registration form
 - Travel, accommodation, activity, and schedule pages
+- Accommodation request and notes capture
+- Generic payment status and amount tracking for admins
 - English/German language toggle scaffold
 - Supabase-backed guest and role model
 - Protected admin screen for guest review
@@ -53,13 +55,16 @@ Publish the generated `dist` directory.
 
 - Edit event details in `src/lib/templateData.ts`.
 - Update colors and layout in `src/index.css`.
-- Replace placeholder copy with your own wedding information.
+- Replace placeholder copy with your own wedding-weekend information.
+- Adapt the accommodation and payment fields to match your venue, room model, and contribution/payment process.
 - Add or remove info pages in `src/App.tsx`.
 - Bring your own Supabase project and never reuse another project's keys.
 
 ## Security And Privacy
 
-This template intentionally does not include real guest data, private media, WhatsApp integrations, payment tracking, passcodes, or personal admin allowlists.
+This template intentionally does not include real guest data, private media, WhatsApp integrations, passcodes, personal admin allowlists, real payment records, payment-provider credentials, or bank details.
+
+Payment tracking is intentionally generic. It is meant for admin-side coordination of contribution status and amounts, not for processing payments.
 
 Before publishing your own fork:
 
