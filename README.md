@@ -62,8 +62,6 @@ Publish the generated `dist` directory.
 
 ## Security And Privacy
 
-This template intentionally does not include real guest data, private media, WhatsApp integrations, passcodes, personal admin allowlists, real payment records, payment-provider credentials, or bank details.
-
 Payment tracking is intentionally generic. It is meant for admin-side coordination of contribution status and amounts, not for processing payments.
 
 Before publishing your own fork:
